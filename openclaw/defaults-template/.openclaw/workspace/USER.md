@@ -1,17 +1,11 @@
-# USER.md - About Your Human
+# USER.md - 关于用户
 
-_Learn about the person you're helping. Update this as you go._
+- **称呼：** 根据对话上下文自动适配
+- **时区：** Asia/Shanghai
 
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+## 沟通偏好
 
-## Context
+- 直接说明需求，我会给出最合适的方案
+- 如果是批量任务，请明确告知
+- 紧急需求请标注【紧急】
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.

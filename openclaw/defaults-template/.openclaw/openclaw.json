@@ -42,6 +42,9 @@
                 "cacheRead": 0,
                 "cacheWrite": 0
               },
+              "compat": {
+                "supportsUsageInStreaming": true
+              },
               "contextWindow": 200000,
               "maxTokens": 65536
             }
@@ -51,6 +54,7 @@
     },
     "agents": {
       "defaults": {
+        "blockStreamingDefault": "on",
         "model": {
           "primary": "auto/model-id"
         },
@@ -59,27 +63,262 @@
         },
         "workspace": "/config/.openclaw/workspace",
         "compaction": {
-          "mode": "default",
+          "memoryFlush": {
+            "enabled": true
+          },
+          "mode": "safeguard",
+          "reserveTokensFloor": 20000,          
           "reserveTokens": 8192,
           "keepRecentTokens": 8192,
           "maxHistoryShare": 0.85
         },
+        "contextPruning": {
+        "hardClearRatio": 0.5,
+        "mode": "cache-ttl",
+        "softTrimRatio": 0.3,
+        "ttl": "5m"
+        },
+        "heartbeat": {
+          "activeHours": {
+            "end": "22:00",
+            "start": "09:00",
+            "timezone": "Asia/Shanghai"
+          },
+          "every": "55m",
+          "target": "last"
+        },
+        "memorySearch": {
+          "cache": {
+            "enabled": true
+          },
+          "enabled": true,
+          "fallback": "none",
+          "provider": "local"
+        },
         "maxConcurrent": 4,
+        "sandbox": {
+          "docker": {
+            "image": "openclaw-sandbox:agentclaw",
+            "network": "bridge"
+          },
+          "mode": "off",
+          "scope": "agent"
+        },
         "subagents": {
           "maxConcurrent": 8
         }
+      },
+      "list": [
+        {
+          "agentDir": "/config/.openclaw/agents/main/agent",
+          "id": "main",
+          "identity": {
+            "name": "main Bot"
+          },
+          "name": "main",
+          "subagents": {
+            "allowAgents": [
+              "corpnet",
+              "logasst",
+              "saleasst",
+              "indinsight",
+              "adminas"
+            ]
+          },
+          "workspace": "/config/.openclaw/workspace"
+        },
+        {
+          "agentDir": "/config/.openclaw/agents/corpnet/agent",
+          "id": "corpnet",
+          "identity": {
+            "name": "corpnet Bot"
+          },
+          "name": "corpnet",
+          "skills": [
+            "ftto-skills"
+          ],
+          "workspace": "/config/.openclaw/workspace-corpnet"
+        },
+        {
+          "agentDir": "/config/.openclaw/agents/logasst/agent",
+          "id": "logasst",
+          "identity": {
+            "name": "logasst Bot"
+          },
+          "name": "logasst",
+          "skills": [
+            "weather",
+            "ctrip",
+            "schedule",
+            "china-express-query",
+            "weekly-menu"
+          ],
+          "workspace": "/config/.openclaw/workspace-logasst"
+        },
+        {
+          "agentDir": "/config/.openclaw/agents/saleasst/agent",
+          "id": "saleasst",
+          "identity": {
+            "name": "saleasst Bot"
+          },
+          "name": "saleasst",
+          "skills": [
+            "lead-scorer",
+            "internet-marketing",
+            "smart-marketing-copy-cn",
+            "influencer-marketing"
+          ],
+          "workspace": "/config/.openclaw/workspace-saleasst"
+        },
+        {
+          "agentDir": "/config/.openclaw/agents/indinsight/agent",
+          "id": "indinsight",
+          "identity": {
+            "name": "indinsight Bot"
+          },
+          "name": "indinsight",
+          "skills": [
+            "zj-policy-qa",
+            "industrial-insight",
+            "multi-search-engine-2-0-1",
+            "daliy-news",
+            "competitive-analysis"
+          ],
+          "workspace": "/config/.openclaw/workspace-indinsight"
+        },
+        {
+          "agentDir": "/config/.openclaw/agents/adminas/agent",
+          "id": "adminas",
+          "identity": {
+            "name": "adminas Bot"
+          },
+          "name": "adminas",
+          "skills": [
+            "excel-xlsx",
+            "pdf-extract",
+            "word-docx",
+            "word-format",
+            "ppt-generator",
+            "offline-asr"
+          ],
+          "workspace": "/config/.openclaw/workspace-adminas"
+        }
+      ]      
+    },
+    "bindings": [],
+    "session": {
+      "dmScope": "per-channel-peer",
+      "reset": {
+        "idleMinutes": 240,
+        "mode": "idle"
+      }
+    },
+    "skills": {
+      "allowBundled": [
+        "weather",
+        "skill-creator",
+        "node-connect",
+        "healthcheck",
+        "clawhub"
+      ],
+      "entries": {},
+      "limits": {
+        "maxCandidatesPerRoot": 100,
+        "maxSkillFileBytes": 100000,
+        "maxSkillsInPrompt": 30,
+        "maxSkillsLoadedPerSource": 50,
+        "maxSkillsPromptChars": 50000
+      },
+      "load": {
+        "watch": true,
+        "watchDebounceMs": 250
       }
     },
     "tools": {
-      "profile": "full"
+      "agentToAgent": {
+        "enabled": true
+      },
+      "allow": [
+        "read",
+        "write",
+        "edit",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "session_status",
+        "cron",
+        "exec",
+        "process"
+      ],
+      "deny": [
+        "browser",
+        "canvas",
+        "nodes",
+        "discord",
+        "gateway"
+      ],
+      "profile": "coding",
+      "sandbox": {
+        "tools": {
+          "allow": [
+            "exec",
+            "process",
+            "read",
+            "write",
+            "edit",
+            "apply_patch",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "session_status"
+          ],
+          "deny": [
+            "browser",
+            "canvas",
+            "nodes",
+            "cron",
+            "discord",
+            "gateway"
+          ]
+        }
+      },
+      "sessions": {
+        "visibility": "all"
+      }
     },
     "commands": {
+      "bash": true,
+      "bashForegroundMs": 2000,
+      "config": true,
+      "debug": true,
       "native": "auto",
       "nativeSkills": "auto",
+      "ownerDisplay": "raw",
       "restart": true,
-      "ownerDisplay": "raw"
+      "text": true
     },
-    "channels": {},
+    "channels": {
+      "dingtalk-connector": {},
+      "feishu": {
+        "allowFrom": [
+          "*"
+        ],
+        "connectionMode": "websocket",
+        "dmPolicy": "open",
+        "domain": "feishu",
+        "enabled": true,
+        "groupPolicy": "open",
+        "reactionNotifications": "own",
+        "resolveSenderNames": true,
+        "typingIndicator": true
+      },
+      "ictmsg": {
+        "enabled": false
+      }
+    },
+    "env": {},
     "gateway": {
       "port": 18789,
       "mode": "local",
@@ -110,6 +349,32 @@
         ]
       }
     },
+    "hooks": {
+      "internal": {
+        "enabled": true,
+        "entries": {
+          "self-improvement": {
+            "enabled": true
+          }
+        }
+      }
+    },
+    "logging": {
+      "consoleLevel": "debug",
+      "consoleStyle": "pretty",
+      "file": "/config/.openclaw/logs/openclaw-debug.log",
+      "level": "debug",
+      "redactPatterns": [
+        ""
+      ],
+      "redactSensitive": "tools"
+    },
+    "messages": {
+      "ackReactionScope": "group-mentions",
+      "inbound": {
+        "debounceMs": 3000
+      }
+    },    
     "plugins": {
       "entries": {
         "bonjour": {
@@ -131,7 +396,36 @@
           "enabled": false
         },
         "dingtalk-connector": {
-          "enabled": false
+          "enabled": true
+        },
+        "changewayguard": {
+          "enabled": true
+        },
+        "feishu": {
+          "enabled": true
+        },
+        "ictmsg": {
+          "enabled": true
+        },
+        "memory-core": {
+          "config": {
+            "dreaming": {
+              "enabled": true,
+              "frequency": "0 3 * * *"
+            }
+          }
+        },
+        "memory-wiki": {
+          "enabled": true
+        },
+        "qwen": {
+          "enabled": true
+        },
+        "tavily": {
+          "enabled": true
+        },
+        "wecom-openclaw-plugin": {
+          "enabled": true
         }
       }
     }

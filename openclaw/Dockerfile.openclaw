@@ -31,7 +31,8 @@ RUN apt-get update \
 
 COPY --from=node-runtime /usr/local /usr/local
 
-RUN npm install -g openclaw@v2026.4.27
+RUN npm install -g openclaw@v2026.4.12
+RUN npm install -g clawhub@0.9.0
 
 COPY defaults-template/.config /defaults/.config
 # Seed the runtime template under /defaults so the first /config sync gets the
@@ -42,16 +43,32 @@ COPY --from=agent-builder /out/openclaw-agent /usr/local/bin/openclaw-agent
 COPY scripts/openclaw-agent-run /etc/services.d/openclaw-agent/run
 COPY scripts/openclaw-agent-finish /etc/services.d/openclaw-agent/finish
 
+# set ictclaw
+COPY config/ictclaw /defaults/ictclaw
+COPY out/ictclaw /etc/ictclaw/ictclaw
+COPY out/openclaw-ictmsg-2026.4.17.tgz /etc/ictclaw/openclaw-ictmsg-2026.4.17.tgz
+COPY scripts/ictclaw-run /etc/services.d/ictclaw/run
+COPY scripts/ictclaw-finish /etc/services.d/ictclaw/finish
+
 # Preinstall the DingTalk channel so its channel id validates before the
 # agent's first startup reconciliation.
 RUN sed -i 's/\r$//' /etc/services.d/openclaw-agent/run \
   && sed -i 's/\r$//' /etc/services.d/openclaw-agent/finish \
+  && sed -i 's/\r$//' /etc/services.d/ictclaw/run \
+  && sed -i 's/\r$//' /etc/services.d/ictclaw/finish \
   && chmod +x /etc/services.d/openclaw-agent/run \
   && chmod +x /etc/services.d/openclaw-agent/finish \
   && chmod +x /usr/local/bin/openclaw-agent \
+  && chmod +x /etc/services.d/ictclaw/run \
+  && chmod +x /etc/services.d/ictclaw/finish \
+  && chmod +x /etc/ictclaw/ictclaw \
   && HOME=/defaults openclaw plugins install @dingtalk-real-ai/dingtalk-connector \
+  && HOME=/defaults openclaw plugins install @wecom/wecom-openclaw-plugin \
+  && HOME=/defaults openclaw plugins install @ct2/changewayguard \
+  && HOME=/defaults openclaw plugins install /etc/ictclaw/openclaw-ictmsg-2026.4.17.tgz \
   && chown -R abc:abc /defaults/.openclaw \
   && chown -R abc:abc /defaults/.config \
-  && mkdir -p /var/lib/openclaw-agent /var/log/openclaw-agent /etc/openclaw-agent
+  && mkdir -p /var/lib/openclaw-agent /var/log/openclaw-agent /etc/openclaw-agent \
+  && mkdir -p /var/lib/ictclaw /var/log/ictclaw /etc/ictclaw
 
 EXPOSE 3000 3001

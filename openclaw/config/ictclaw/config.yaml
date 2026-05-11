@@ -1,0 +1,27 @@
+auth:
+  jwt_secret: ""
+  password: admin123
+  token_expire: 24h
+  username: admin
+log:
+  level: debug
+mqtt:
+  broker:
+    address: "192.168.133.1:11883"
+    password: uk8V*x4l
+    username: M2
+  enable: true
+  pub:
+    qos: 1
+    topic: /gateway/compute/reply
+  report:
+    enable: true
+    every_time: 60
+    qos: 1
+    topic: /gateway/compute/report
+  sub:
+    qos: 1
+    topic: /gateway/compute/command
+openclaw:
+  gateway_addr: localhost:18789
+  gateway_token: some-token-register-here
