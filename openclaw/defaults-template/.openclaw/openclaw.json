@@ -300,7 +300,6 @@
       "text": true
     },
     "channels": {
-      "dingtalk-connector": {},
       "feishu": {
         "allowFrom": [
           "*"
@@ -313,9 +312,6 @@
         "reactionNotifications": "own",
         "resolveSenderNames": true,
         "typingIndicator": true
-      },
-      "ictmsg": {
-        "enabled": false
       }
     },
     "env": {},
@@ -396,16 +392,16 @@
           "enabled": false
         },
         "dingtalk-connector": {
-          "enabled": true
+          "enabled": false
         },
         "changewayguard": {
-          "enabled": true
+          "enabled": false
         },
         "feishu": {
           "enabled": true
         },
         "ictmsg": {
-          "enabled": true
+          "enabled": false
         },
         "memory-core": {
           "config": {
@@ -425,7 +421,7 @@
           "enabled": true
         },
         "wecom-openclaw-plugin": {
-          "enabled": true
+          "enabled": false
         }
       }
     }
