@@ -318,20 +318,27 @@
     "gateway": {
       "port": 18789,
       "mode": "local",
-      "bind": "loopback",
+      "bind": "lan",
       "controlUi": {
         "allowedOrigins": [
           "http://localhost:18789",
+          "http://${OPENCLAW_SVC}:18789",
           "http://127.0.0.1:18789"
-        ]
+        ],
+        "allowInsecureAuth": true,
+        "dangerouslyDisableDeviceAuth": true
       },
       "auth": {
-        "mode": "none",
-        "token": "xxxxxx"
+        "mode": "token",
+        "token": "${CLAWMANAGER_INSTANCE_TOKEN}"
       },
       "tailscale": {
         "mode": "off",
         "resetOnExit": false
+      },
+      "remote": {
+        "url": "ws://127.0.0.1:18789",
+        "token": "${CLAWMANAGER_INSTANCE_TOKEN}"
       },
       "nodes": {
         "denyCommands": [
