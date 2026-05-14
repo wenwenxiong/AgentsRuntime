@@ -22,7 +22,6 @@ ENV PUID=1000
 ENV PGID=1000
 ENV TZ=Asia/Shanghai
 
-LABEL shm_size="1gb"
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -32,8 +31,8 @@ RUN apt-get update \
 
 COPY --from=node-runtime /usr/local /usr/local
 
-RUN npm install -g openclaw@v2026.4.12
-RUN npm install -g clawhub@0.9.0
+RUN npm install -g openclaw@v2026.4.12 clawhub@0.9.0 \
+ && npm cache clean --force
 
 COPY defaults-template/.config /defaults/.config
 # Seed the runtime template under /defaults so the first /config sync gets the
@@ -45,7 +44,7 @@ COPY scripts/openclaw-agent-run /etc/services.d/openclaw-agent/run
 COPY scripts/openclaw-agent-finish /etc/services.d/openclaw-agent/finish
 
 # set ictmsg
-COPY out/openclaw-ictmsg-2026.4.17.tgz /etc/ictclaw/openclaw-ictmsg-2026.4.17.tgz
+COPY out/openclaw-ictmsg-2026.4.17.tgz /tmp/openclaw-ictmsg.tgz
 
 # Preinstall the DingTalk channel so its channel id validates before the
 # agent's first startup reconciliation.
@@ -57,7 +56,8 @@ RUN sed -i 's/\r$//' /etc/services.d/openclaw-agent/run \
   && HOME=/defaults openclaw plugins install @dingtalk-real-ai/dingtalk-connector@0.8.13 \
   && HOME=/defaults openclaw plugins install @wecom/wecom-openclaw-plugin@2026.4.8 \
   && HOME=/defaults openclaw plugins install @ct2/changewayguard@6.8.29 --dangerously-force-unsafe-install \
-  && HOME=/defaults openclaw plugins install /etc/ictclaw/openclaw-ictmsg-2026.4.17.tgz \
+  && HOME=/defaults openclaw plugins install /tmp/openclaw-ictmsg.tgz \
+  && rm -f /tmp/openclaw-ictmsg.tgz \
   && chown -R abc:abc /defaults/.openclaw \
   && chown -R abc:abc /defaults/.config \
   && mkdir -p /var/lib/openclaw-agent /var/log/openclaw-agent /etc/openclaw-agent

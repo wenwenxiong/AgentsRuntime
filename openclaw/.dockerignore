@@ -1,5 +1,26 @@
 .git
 .gocache
 .gomodcache
+.gitattributes
+.gitignore
+
+# Build artifacts not needed in Docker context
 openclaw-agent
-dist/node-v22.17.0-linux-x64.tar.xz
+out/ictclaw
+out/openclaw-*
+
+# Documentation
+README.md
+README.zh-CN.md
+docs/
+
+# IDE and OS files
+.vscode/
+.idea/
+*.exe
+*.dll
+*.DS_Store
+Thumbs.db
+
+# Deployment configs (not needed in image)
+deployments/
