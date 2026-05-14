@@ -3,6 +3,6 @@ Type=Application
 Version=1.0
 Name=OpenClaw Web UI
 Comment=Open browser to http://localhost:18789 after a short delay (gateway startup)
-Exec=/usr/bin/bash -lc "sleep 8 && xdg-open http://localhost:18789"
+Exec=/usr/bin/bash -lc "sleep 8 && xdg-open http://localhost:18789/#token=${CLAWMANAGER_INSTANCE_TOKEN}"
 Terminal=false
 StartupNotify=false
